@@ -1,0 +1,34 @@
+name: Autonomous AI Discovery Agent
+
+on:
+
+Run automatically every day at 10:00 AM UTC
+
+schedule:
+- cron: '0 10 * * *'
+
+Allow manual execution by clicking a button in GitHub
+
+workflow_dispatch:
+
+jobs:
+hunt-and-publish:
+runs-on: ubuntu-latest
+
+steps:
+  - name: Check out repository
+    uses: actions/checkout@v4
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: '18'
+
+  - name: Install dependencies
+    run: npm install rss-parser firebase-admin
+
+  - name: Run Autonomous Agent
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    run: node agent.js
